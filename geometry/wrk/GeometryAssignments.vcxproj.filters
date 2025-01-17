@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GeoemetryAPIs">
+      <UniqueIdentifier>{2b14f77e-5b98-4d4d-b64d-c9368016b3ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Polyline3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Line3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CubicHermiteCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Point3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vector3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Segment2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vector2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Segment3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FileHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Polynomial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BezierCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BSplineCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Point2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\BezierCurveInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\BSplineCurveInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\CubicHermiteCurveInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\FileHandlingInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Line3DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\MatrixInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\PlaneInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Point2DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Point3DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\PolyLine3DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\PolynomialInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Segment2DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Segment3DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Vector2DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\geometryAPIs\src\Vector3DInterface.h">
+      <Filter>GeoemetryAPIs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Point2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Point3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Vector3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Vector2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Segment3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Kernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Polyline3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Line3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FileHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CubicHermiteCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Segment2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Polynomial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BezierCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BSplineCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\geometryAPIs\src\Point3DInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
