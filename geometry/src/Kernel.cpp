@@ -52,8 +52,8 @@ int main()
 	//Matrix multiplication = temp.GetMatrixMultiplicationNew(second);
 	//return 0;
 
-	std::string pathOfFileToRead("C:\\Users\\digvijays\\Desktop\\GeometryAssignments\\GeometryAssignmentsModified\\GeometryAssignments\\PointsFromFile.txt");
-	std::string pathOfFileToWrite("C:\\Users\\digvijays\\Desktop\\GeometryAssignments\\GeometryAssignmentsModified\\GeometryAssignments\\PointsToFile.txt");
+	std::string pathOfFileToRead("D:\\PointsFromFile\\PointsFromFile.txt");
+	std::string pathOfFileToWrite("D:\\PointsFromFile\\PointsToFile.txt");
 
 	FileHandling fileHandling(pathOfFileToRead, pathOfFileToWrite);
 
@@ -137,7 +137,7 @@ int main()
 		std::cout << "Enter degree for bspline curve\n";
 		std::cin >> degree;
 		BSplineCurve bsplineCurve(pointsFromFile, degree);
-		bsplineCurve.GetPointsALongBSplineCurve(pointOnCurve);
+		bsplineCurve.GetPointsALongBSplineCurve(pointOnCurve, 1000);
 		break;
 	}
 	default:
