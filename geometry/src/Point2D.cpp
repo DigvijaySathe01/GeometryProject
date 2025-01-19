@@ -76,6 +76,14 @@ double Point2D::GetDistance(Point2D secondPoint)const
 
 //-----------------------------------------------------------------------------
 
+double Point2D::GetSquareDistance(Point2D secondPoint) const
+{
+	return (std::pow((m_x - secondPoint.m_x), 2)
+		+ std::pow((m_y - secondPoint.m_y), 2));
+}
+
+//-----------------------------------------------------------------------------
+
 Point2D Point2D::operator*(const double scalar) const
 {
 	return Point2D(m_x * scalar, m_y * scalar);

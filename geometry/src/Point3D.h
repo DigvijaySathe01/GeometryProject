@@ -46,6 +46,9 @@ public:
 	//This function calculate the distance between two points
 	double GetDistance(Point3D secondPoint)const override;
 
+	//This function calculate the square distance between two points
+	double GetSquareDistance(Point3D secondPoint)const;
+
 	//Function to get point along vector
 	Point3D GetPointAlongVector(const Vector3D& vector, double distance) override;
 

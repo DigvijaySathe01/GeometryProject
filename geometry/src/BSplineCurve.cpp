@@ -2,6 +2,7 @@
 #include "Point3D.h"
 #include <cassert>
 #include <stdexcept>
+#include <climits>
 //-----------------------------------------------------------------------------
 
 const double ZeroConstant = 1e-6;
@@ -55,6 +56,27 @@ double BSplineCurve::BSplineBasisFunction(const int i, const int degree, const d
 
 //-----------------------------------------------------------------------------
 
+Point3D BSplineCurve::GetPointOnCurve(const double param) const
+{
+	assert(param >= m_knotVector[m_degree] && param <= m_knotVector[m_numberOfSpans - m_degree] && "Parameter value out of bound!!!");
+
+	double x_coordinate = 0;
+	double y_coordinate = 0;
+	double z_coordinate = 0;
+	int controlPointsSize = static_cast<int>(m_controlPoints.size());
+	for (int iControlPoint = 0; iControlPoint < controlPointsSize; ++iControlPoint)
+	{
+		double basisFunctionValue = BSplineBasisFunction(iControlPoint, m_degree, param);
+		x_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetX());
+		y_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetY());
+		z_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetZ());
+	}
+
+	return Point3D(x_coordinate, y_coordinate, z_coordinate);
+}
+
+//-----------------------------------------------------------------------------
+
 void BSplineCurve::GetPointsALongBSplineCurve(std::vector<Point3D>& pointsAlongVecor, const int numPoints) const
 {
 	assert(numPoints > 0 && "Invalid number of points!!!");
@@ -65,18 +87,7 @@ void BSplineCurve::GetPointsALongBSplineCurve(std::vector<Point3D>& pointsAlongV
 	double paramIncrement = static_cast<double>(endParam - startParam) / numPoints;
 	for (double iParam = startParam; iParam <= endParam; iParam += paramIncrement)
 	{
-		double x_coordinate = 0;
-		double y_coordinate = 0;
-		double z_coordinate = 0;
-		int controlPointsSize = static_cast<int>(m_controlPoints.size());
-		for (int iControlPoint = 0; iControlPoint < controlPointsSize; ++iControlPoint)
-		{
-			double basisFunctionValue = BSplineBasisFunction(iControlPoint, m_degree, iParam);
-			x_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetX());
-			y_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetY());
-			z_coordinate += basisFunctionValue * (m_controlPoints[iControlPoint].GetZ());
-		}
-		pointsAlongVecor.emplace_back(x_coordinate, y_coordinate, z_coordinate);
+		pointsAlongVecor.emplace_back(GetPointOnCurve(iParam));
 	}
 }
 
@@ -181,6 +192,74 @@ void BSplineCurve::GetControlPointsOfBSplineDerivative(const int order, std::vec
 		--derivativeDegree;
 		derivativeControlPoints = tempControlPoints;
 	}
+}
+
+//-----------------------------------------------------------------------------
+
+Point3D BSplineCurve::ProjectPoint(const Point3D& pointToProject, const double guessParam, 
+								   const double endParam, const int maxIterations) const
+{
+	return ProjectPointUsingNewtonRaphsonMethod(pointToProject, guessParam, endParam, maxIterations);
+}
+
+//-----------------------------------------------------------------------------
+
+Point3D BSplineCurve::ProjectPointUsingBruteForceMethod(const Point3D& pointToProject, const double startParam, 
+													    const double endParam, const int numSamples) const
+{
+	double minDistance = std::numeric_limits<double>::max();
+	Point3D closestPoint;
+
+	for (int iSample = 0; iSample < numSamples; ++iSample)
+	{
+		double currentParam = startParam + iSample * (endParam - startParam) / (numSamples - 1);
+		Point3D currentPoint = GetPointOnCurve(currentParam);
+		double distance = currentPoint.GetSquareDistance(pointToProject);
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+			closestPoint = currentPoint;
+		}
+	}
+	return closestPoint;
+}
+
+//-----------------------------------------------------------------------------
+
+Point3D BSplineCurve::ProjectPointUsingNewtonRaphsonMethod(const Point3D& pointToProject, const double guessParam, 
+														   const double endParam, const int maxIterations) const
+{
+	assert(guessParam >= m_knotVector[m_degree] && guessParam <= m_knotVector[m_numberOfSpans - m_degree] && "Parameter value out of bound!!!");
+
+	double t = guessParam;
+	for (int iIter = 0; iIter < maxIterations; ++iIter)
+	{
+		Point3D Ct = GetPointOnCurve(t);
+		Point3D dCt = GetPointOnBSplineDerivative(t, 1);
+		Point3D ddCt = GetPointOnBSplineDerivative(t, 2);
+
+		Point3D diff = Point3D(Ct.GetX()-pointToProject.GetX(), Ct.GetY() - pointToProject.GetY(), Ct.GetZ() - pointToProject.GetZ());
+		double firstDerivative = 2 * (diff.GetX()*dCt.GetX() + diff.GetY() * dCt.GetY() + diff.GetZ() * dCt.GetZ());
+		double secondDerivative  = 2 * (dCt.GetX() * dCt.GetX() + dCt.GetY() * dCt.GetY() + dCt.GetZ() * dCt.GetZ() 
+										+ diff.GetX() * ddCt.GetX() + diff.GetY() * ddCt.GetY() + diff.GetZ() * ddCt.GetZ());
+
+		if (fabs(secondDerivative) <= ZeroConstant)
+			return ProjectPointUsingBruteForceMethod(pointToProject, guessParam, endParam, 100);
+
+		double tNew = t - firstDerivative / secondDerivative;
+
+		tNew = std::max(guessParam,std::min(tNew,endParam));
+
+		if (fabs(tNew - t) <= ZeroConstant)
+		{
+			t = tNew;
+			break;
+		}
+
+		t = tNew;
+	}
+
+	return GetPointOnCurve(t);
 }
 
 //-----------------------------------------------------------------------------

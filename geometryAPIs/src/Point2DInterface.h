@@ -28,6 +28,9 @@ public:
 	//This function calculate the distance between two points
 	virtual double GetDistance(Point2D secondPoint)const = 0;
 
+	//This function calculate the square distance between two points
+	virtual double GetSquareDistance(Point2D secondPoint)const = 0;
+
 	//Overloaded * operator to scale a Point3D by a scalar value
 	virtual Point2D operator*(const double scalar)const = 0;
 

@@ -35,6 +35,9 @@ public:
 	//This function calculate the distance between two points
 	virtual double GetDistance(Point3D secondPoint)const = 0;
 
+	//This function calculate the square distance between two points
+	virtual double GetSquareDistance(Point3D secondPoint)const = 0;
+
 	//Function to get point along vector
 	virtual Point3D GetPointAlongVector(const Vector3D& vector, double distance) = 0;
 

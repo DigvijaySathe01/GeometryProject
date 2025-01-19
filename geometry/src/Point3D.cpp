@@ -95,6 +95,15 @@ double Point3D::GetDistance(Point3D secondPoint)const
 
 //-----------------------------------------------------------------------------
 
+double Point3D::GetSquareDistance(Point3D secondPoint) const
+{
+	return (std::pow((m_x - secondPoint.m_x), 2)
+		+ std::pow((m_y - secondPoint.m_y), 2)
+		+ std::pow((m_z - secondPoint.m_z), 2));
+}
+
+//-----------------------------------------------------------------------------
+
 Point3D Point3D::GetPointAlongVector(const Vector3D& vector, double distance)
 {
 	return Point3D((m_x + distance*vector.GetI()),(m_y + distance * vector.GetJ()),(m_z + distance * vector.GetK()));
