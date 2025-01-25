@@ -8,6 +8,21 @@ class BSplineCurveInterface
 {
 public:
 
+	//Function to get the degree of BSpline curve
+	virtual int GetDegree()const = 0;
+
+	//Function to get control points of BSpline curve
+	virtual const std::vector<Point3D>& GetControlPoints()const = 0;
+	
+	//Function to get knot vector of BSpline curve
+	virtual const std::vector<double>& GetKnotVector()const = 0;
+
+	//Function to get knot at give index
+	virtual double GetKnotAtIndex(const size_t index)const = 0;
+
+	//Function to get control point at given index
+	virtual Point3D GetControlPointAtIndex(const size_t index)const = 0;
+
 	//Function for basis function for BSpline curve
 	virtual double BSplineBasisFunction(const int i, const int degree, const double param)const = 0;
 

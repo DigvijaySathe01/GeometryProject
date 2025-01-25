@@ -34,6 +34,48 @@ BSplineCurve::BSplineCurve(const std::vector<Point3D>& controlPoints, int degree
 
 //-----------------------------------------------------------------------------
 
+int BSplineCurve::GetDegree() const
+{
+	return m_degree;
+}
+
+//-----------------------------------------------------------------------------
+
+const std::vector<Point3D>& BSplineCurve::GetControlPoints() const
+{
+	return m_controlPoints;
+}
+
+//-----------------------------------------------------------------------------
+
+const std::vector<double>& BSplineCurve::GetKnotVector() const
+{
+	return m_knotVector;
+}
+
+//-----------------------------------------------------------------------------
+
+double BSplineCurve::GetKnotAtIndex(const size_t index) const
+{
+	if (index >= m_knotVector.size())
+		throw std::out_of_range("knot vector index out of bound!!!");
+
+	return m_knotVector[index];
+}
+
+//-----------------------------------------------------------------------------
+
+Point3D BSplineCurve::GetControlPointAtIndex(const size_t index) const
+{
+	if (index >= m_controlPoints.size())
+		throw std::out_of_range("Control point vector index out of bound!!!");
+
+
+	return m_controlPoints[index];
+}
+
+//-----------------------------------------------------------------------------
+
 double BSplineCurve::BSplineBasisFunction(const int i, const int degree, const double param) const
 {
 	if (degree == 0)
@@ -81,8 +123,8 @@ void BSplineCurve::GetPointsALongBSplineCurve(std::vector<Point3D>& pointsAlongV
 {
 	assert(numPoints > 0 && "Invalid number of points!!!");
 
-	int startParam = m_knotVector[m_degree];
-	int endParam = m_knotVector[m_numberOfSpans - m_degree];
+	double startParam = m_knotVector[m_degree];
+	double endParam = m_knotVector[m_numberOfSpans - m_degree];
 
 	double paramIncrement = static_cast<double>(endParam - startParam) / numPoints;
 	for (double iParam = startParam; iParam <= endParam; iParam += paramIncrement)
