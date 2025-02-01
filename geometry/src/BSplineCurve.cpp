@@ -3,6 +3,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <climits>
+#include <algorithm>
 //-----------------------------------------------------------------------------
 
 const double ZeroConstant = 1e-6;
@@ -445,12 +446,27 @@ void BSplineCurve::SplitCurveAtKnot(const double knot, std::vector<BSplineCurve>
 
 bool BSplineCurve::IsValid() const
 {
-	bool stat1 = (m_numberOfSpans == (m_degree + m_controlPoints.size()));
-	bool stat2 = (std::count(m_knotVector.begin(), m_knotVector.end(), m_knotVector[0]) == m_degree + 1)
-		&& (std::count(m_knotVector.begin(), m_knotVector.end(), m_knotVector[m_knotVector.size() - 1]) == m_degree + 1);
+	bool validSize = (m_knotVector.size() == (m_degree + m_controlPoints.size() + 1));
+	if (!validSize)
+		return false;
 
-	return stat1 && stat2;
+	bool validStartKnots = std::all_of(m_knotVector.begin(), m_knotVector.begin() + m_degree + 1,
+		[&](double knot) { return knot == m_knotVector[0]; });
+	if (!validStartKnots)
+		return false;
+
+	bool validEndKnots = std::all_of(m_knotVector.end() - (m_degree + 1), m_knotVector.end(),
+		[&](double knot) { return knot == m_knotVector.back(); });
+	if (!validEndKnots)
+		return false;
+
+	bool nonDecreasingKnotVector = std::is_sorted(m_knotVector.begin(), m_knotVector.end());
+	if (!nonDecreasingKnotVector)
+		return false;
+
+	return true;
 }
+
 
 //-----------------------------------------------------------------------------
 
