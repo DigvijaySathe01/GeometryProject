@@ -3,6 +3,7 @@
 #include <vector>
 
 class Point3D;
+class BSplineCurve;
 
 class BSplineCurveInterface
 {
@@ -52,6 +53,15 @@ public:
 
 	//Function to get projection of point on BSpline using Newton-Raphson's Method
 	virtual Point3D ProjectPointUsingNewtonRaphsonMethod(const Point3D& pointToProject, const double guessParam, const double endParam, const int maxInterations)const = 0;
+
+	//Function to insert a knot in BSpline curve
+	virtual void InsertKnot(const double newKnot) = 0;
+
+	//Function to split the BSpline curve at given knot
+	virtual void SplitCurveAtKnot(const double knot, std::vector<BSplineCurve>& splitCurve)const = 0;
+
+	//Function to check the validity of the BSpline curve
+	virtual bool IsValid()const = 0;
 
 	//Default destructor
 	virtual ~BSplineCurveInterface() = default;

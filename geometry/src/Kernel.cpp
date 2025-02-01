@@ -137,7 +137,18 @@ int main()
 		std::cout << "Enter degree for bspline curve\n";
 		std::cin >> degree;
 		BSplineCurve bsplineCurve(pointsFromFile, degree);
-		bsplineCurve.GetPointsALongBSplineCurve(pointOnCurve, 1000);
+		std::vector<Point3D> orgCurve;
+		bsplineCurve.GetPointsALongBSplineCurve(orgCurve,1000);
+
+		//bsplineCurve.GetPointsALongBSplineCurve(pointOnCurve, 1000);
+		std::vector<BSplineCurve> splitVectors;
+		bsplineCurve.SplitCurveAtKnot(5.5, splitVectors);
+
+		std::vector<Point3D> split1;
+		splitVectors[0].GetPointsALongBSplineCurve(split1,1000);
+		std::vector<Point3D> split2;
+		splitVectors[1].GetPointsALongBSplineCurve(split2, 1000);
+
 		break;
 	}
 	default:

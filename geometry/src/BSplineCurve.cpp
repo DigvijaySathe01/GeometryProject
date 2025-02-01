@@ -306,3 +306,151 @@ Point3D BSplineCurve::ProjectPointUsingNewtonRaphsonMethod(const Point3D& pointT
 
 //-----------------------------------------------------------------------------
 
+void BSplineCurve::InsertKnot(const double newKnot) 
+{
+	assert(newKnot >= m_knotVector[m_degree] && newKnot <= m_knotVector[m_numberOfSpans - m_degree] && "New value value is out of bound!!!");
+
+	int currentMultiplicity = static_cast<int>(std::count(m_knotVector.begin(), m_knotVector.end(), newKnot));
+
+	if (currentMultiplicity >= m_degree)
+	{
+		throw std::runtime_error("Cannot insert knot, multiplicity exceeds the degree of the curve!!!");
+	}
+
+	auto positionOfKnot = std::upper_bound(m_knotVector.begin(), m_knotVector.end(), newKnot);
+	
+	int spanIndex = static_cast<int>(positionOfKnot - m_knotVector.begin()) - 1;
+
+	m_knotVector.insert(positionOfKnot, newKnot);
+
+	std::vector<Point3D> updatedControlPoints = m_controlPoints;
+	updatedControlPoints.insert(updatedControlPoints.begin() + spanIndex, Point3D(0,0,0));
+
+	int numOldControlPoints = static_cast<int>(m_controlPoints.size());
+	for (int i = (spanIndex - m_degree + 1); i <= spanIndex; ++i)
+	{
+		if (i > 0 && i < numOldControlPoints)
+		{
+			double alpha = 0.0;
+			double denominator = m_knotVector[i + m_degree] - m_knotVector[i];
+
+			if (!(fabs(denominator) <= ZeroConstant))
+			{
+				alpha = (newKnot - m_knotVector[i]) / denominator;
+			}
+
+			updatedControlPoints[i] = m_controlPoints[i - 1] * (1.0 - alpha) + m_controlPoints[i] * alpha;
+		}
+	}
+
+	m_controlPoints = updatedControlPoints;
+	m_numberOfSpans = static_cast<int>(m_knotVector.size()) - 1;
+
+	//To ensure degree + 1 knot multiplicity at start and end
+	if (m_knotVector.front() != m_knotVector[m_degree])
+	{
+		for (int i = 0; i < m_degree; ++i)
+		{
+			m_knotVector[i] = m_knotVector[m_degree];
+		}
+	}
+
+	if (m_knotVector.back() != m_knotVector[m_numberOfSpans - m_degree])
+	{
+		for (int i = 0; i < m_degree; ++i)
+		{
+			m_knotVector[m_numberOfSpans - i] = m_knotVector[m_numberOfSpans - m_degree];
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void BSplineCurve::SplitCurveAtKnot(const double knot, std::vector<BSplineCurve>& splitCurve) const
+{
+	assert(knot >= m_knotVector[m_degree] && knot <= m_knotVector[m_numberOfSpans - m_degree] && "Knot value is out of bound!!!");
+
+	int currentMultiplicity = static_cast<int>(std::count(m_knotVector.begin(), m_knotVector.end(), knot));
+
+	if (currentMultiplicity >= m_degree)
+	{
+		throw std::runtime_error("Curve is already split at given knot!!!");
+	}
+
+	BSplineCurve curveToSplit(*this);
+
+	//To split the bspline curve at given knot we insert the given knot (degree - multiplicity) times
+	for (int iInsertion = 1; iInsertion <= (m_degree - currentMultiplicity); ++iInsertion)
+		curveToSplit.InsertKnot(knot);
+
+	//Left spit curve after splitting original curve
+	std::vector<double> leftCurveKnots;
+	std::vector<Point3D> leftCurveControlPoints;
+
+	auto upperKnotPos = std::upper_bound(curveToSplit.m_knotVector.begin(), curveToSplit.m_knotVector.end(), knot);
+	size_t upperKnotIndex = upperKnotPos - curveToSplit.m_knotVector.begin();
+
+	for (size_t iKnot = 0; iKnot < upperKnotIndex; ++iKnot)
+	{
+		leftCurveKnots.push_back(curveToSplit.m_knotVector[iKnot]);
+
+		//To ensure degree + 1 multiplicity at end of the knot vector of left split curve
+		if(iKnot == upperKnotIndex - 1)
+			leftCurveKnots.push_back(curveToSplit.m_knotVector[iKnot]);
+	}
+
+	auto lowerKnotPos = std::lower_bound(curveToSplit.m_knotVector.begin(), curveToSplit.m_knotVector.end(), knot);
+	size_t lowerKnotIndex = lowerKnotPos - curveToSplit.m_knotVector.begin();
+
+	for (size_t iControlPoint = 0; iControlPoint < lowerKnotIndex; ++iControlPoint)
+	{
+		leftCurveControlPoints.push_back(curveToSplit.m_controlPoints[iControlPoint]);
+	}
+
+	BSplineCurve leftSplitCurve(leftCurveControlPoints, m_degree);
+	leftSplitCurve.m_knotVector = leftCurveKnots;
+
+	assert(leftSplitCurve.IsValid() && "Invalid left split curve!!!");
+
+	//right spit curve after splitting original curve
+	std::vector<double> rightCurveKnots;
+	std::vector<Point3D> rightCurveControlPoints;
+
+	for (size_t iKnot = lowerKnotIndex; iKnot < curveToSplit.m_knotVector.size(); ++iKnot)
+	{
+		rightCurveKnots.push_back(curveToSplit.m_knotVector[iKnot]);
+
+		//To ensure degree + 1 multiplicity at start of the knot vector of right split curve
+		if (iKnot == curveToSplit.m_knotVector.size() - 1)
+			rightCurveKnots.push_back(curveToSplit.m_knotVector[iKnot]);
+	}
+
+	for (size_t iControlPoint = lowerKnotIndex; iControlPoint < curveToSplit.m_controlPoints.size(); ++iControlPoint)
+	{
+		rightCurveControlPoints.push_back(curveToSplit.m_controlPoints[iControlPoint]);
+	}
+
+	BSplineCurve rightSplitCurve(rightCurveControlPoints, m_degree);
+	rightSplitCurve.m_knotVector = rightCurveKnots;
+
+	assert(rightSplitCurve.IsValid() && "Invalid right split curve!!!");
+
+	splitCurve.clear();
+	splitCurve.push_back(leftSplitCurve);
+	splitCurve.push_back(rightSplitCurve);
+
+}
+
+//-----------------------------------------------------------------------------
+
+bool BSplineCurve::IsValid() const
+{
+	bool stat1 = (m_numberOfSpans == (m_degree + m_controlPoints.size()));
+	bool stat2 = (std::count(m_knotVector.begin(), m_knotVector.end(), m_knotVector[0]) == m_degree + 1)
+		&& (std::count(m_knotVector.begin(), m_knotVector.end(), m_knotVector[m_knotVector.size() - 1]) == m_degree + 1);
+
+	return stat1 && stat2;
+}
+
+//-----------------------------------------------------------------------------
+

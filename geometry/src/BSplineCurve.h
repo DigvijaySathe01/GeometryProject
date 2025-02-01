@@ -62,6 +62,15 @@ public:
 	//Function to get projection of point on BSpline using Newton-Raphson's Method
 	virtual Point3D ProjectPointUsingNewtonRaphsonMethod(const Point3D& pointToProject, const double guessParam, const double endParam, const int maxInterations)const override;
 
+	//Function to insert a knot in BSpline curve
+	void InsertKnot(const double newKnot) override;
+
+	//Function to split the BSpline curve at given knot
+	void SplitCurveAtKnot(const double knot, std::vector<BSplineCurve>& splitCurve)const override;
+
+	//Function to check the validity of the BSpline curve
+	bool IsValid()const override;
+
 	//Default destructor
 	~BSplineCurve() = default;
 };
